@@ -1,4 +1,25 @@
 # LINUX
 
 
-vless://d98eb0ca-8190-4b95-89bb-b997588df102@80.76.35.132:16533?type=tcp&security=reality&pbk=A3FJ3xaHy0bFkIOYrqL7THJx5oXGDf1mXs20q-rzkEQ&fp=chrome&sni=google.com&sid=6a4f&spx=%2F&flow=xtls-rprx-vision#moon-bmmh9f66
+port: 7890
+socks-port: 7891
+mixed-port: 7892
+log-level: info
+
+proxies:
+  - name: "V2Ray Server"
+    type: v2ray
+    server: <V2Ray_IP>
+    port: <V2Ray_Port>
+    uuid: <Your_UUID>
+    alterId: <Your_AlterId>
+    cipher: auto
+
+proxy-groups:
+  - name: "Auto"
+    type: select
+    proxies:
+      - "V2Ray Server"
+
+rules:
+  - MATCH, Auto
