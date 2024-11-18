@@ -1,24 +1,46 @@
+awk '
+BEGIN {
+    # Определение массивов для дней недели и месяцев
+    days_of_week["вс"]="воскресенье";
+    days_of_week["пн"]="понедельник";
+    days_of_week["вт"]="вторник";
+    days_of_week["ср"]="среда";
+    days_of_week["чт"]="четверг";
+    days_of_week["пт"]="пятница";
+    days_of_week["сб"]="суббота";
 
-# Читаем данные из системного файла
-datetime=$(cat /proc/driver/rtc)
+    months["Январь"]="января"; months["Февраль"]="февраля"; months["Март"]="марта";
+    months["Апрель"]="апреля"; months["Май"]="мая"; months["Июнь"]="июня";
+    months["Июль"]="июля"; months["Август"]="августа"; months["Сентябрь"]="сентября";
+    months["Октябрь"]="октября"; months["Ноябрь"]="ноября"; months["Декабрь"]="декабря";
+}
 
-# Извлекаем дату и время
-rtc_date=$(echo "$datetime" | grep "^rtc_date" | awk '{print $3}')
-rtc_time=$(echo "$datetime" | grep "^rtc_time" | awk '{print $3}')
+NR == 1 {
+    # Первая строка содержит месяц и год
+    current_month = $1;
+    current_month_name = months[current_month];
+}
 
-# Извлекаем компоненты даты
-year=$(echo "$rtc_date" | cut -d'-' -f1)
-month=$(echo "$rtc_date" | cut -d'-' -f2)
-day=$(echo "$rtc_date" | cut -d'-' -f3)
+NR == 2 {
+    # Вторая строка содержит сокращения дней недели
+    for (i = 1; i <= NF; i++) {
+        day_positions[i] = $i;
+    }
+}
 
-# Определяем день недели (через `bash`)
-days=("воскресенье" "понедельник" "вторник" "среда" "четверг" "пятница" "суббота")
-day_of_week=$(date -d "$rtc_date" +%u) # Определение дня недели (1 = понедельник)
-weekday=${days[$day_of_week]}
+NR > 2 {
+    # Остальные строки содержат числа календаря
+    for (i = 1; i <= NF; i++) {
+        if ($i == strftime("%d")) {
+            # Находим текущий день
+            current_day = $i;
+            current_weekday = days_of_week[day_positions[i]];
+        }
+    }
+}
 
-# Преобразуем номер месяца в название
-months=("января" "февраля" "марта" "апреля" "мая" "июня" "июля" "августа" "сентября" "октября" "ноября" "декабря")
-month_name=${months[$((10#$month - 1))]}
-
-# Выводим результат
-echo "сегодня $weekday, $day $month_name $year года"
+END {
+    # Выводим результат
+    print "сегодня " current_weekday ", " current_day " " current_month_name;
+}
+' calendar.txt
