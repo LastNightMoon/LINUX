@@ -1,1 +1,1 @@
-ls -d */ | awk '/^[а-яА-ЯёЁ]+\/$/ {gsub(/\/$/, ""); print}'
+find . -type f -name "*.txt" -exec du -b {} + | awk '{sum += $1} END {print sum}'
