@@ -1,1 +1,1 @@
-find . -type f -name "*.txt" -exec du -b {} + | awk '{sum += $1} END {print sum}'
+find . -type f -name "data*.txt" -exec dirname {} \; | sort -u
