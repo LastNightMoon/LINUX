@@ -1,1 +1,1 @@
-last | awk '{print $1, $4, $5, $6, $7, $8}' | sort -k2M -k3n -k4
+vless://7c1175c6-bd5d-4136-8e1b-1720c5036f79@185.233.81.142:54895?type=tcp&security=reality&pbk=A3FJ3xaHy0bFkIOYrqL7THJx5oXGDf1mXs20q-rzkEQ&fp=chrome&sni=google.com&sid=6a4f&spx=%2F#moon%20-%20Cloned-30h61x60
